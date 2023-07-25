@@ -1,25 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 //Prototipos
-void mesas();
-void reservas();
-void cobro();
-void inventario();
-void empleados();
+void adminMesas();
+void adminReservas();
+void adminCobro();
+void adminInventario();
+void adminEmpleados();
+
+bool buscar(char buscarmesero []);
 
 //Structs
-struct mesa{
+typedef struct mesa{
     int numMesa;
     char mesero[25];
-};
+} mesa;
 
 //Variables Globales
 int mainOpc = 500;
 
+mesa mesas[30]; //Mesas del bar
 
-char meseros[10][20] = { //Meseros del bar
+char meseros[15][20] = { //Meseros del bar
     "Juan",
     "Maria",
     "Roberto",
@@ -28,17 +32,8 @@ char meseros[10][20] = { //Meseros del bar
 };
 
 
-int mesa[30]; //Mesas del bar
-
-
-
-
 
 int main(){
-    for(int i = 0; i < 30; i++){ //Llena el array "mesa"
-        mesa[i] = i + 1;
-    }
-
 
     while(mainOpc != 0){ //Imprimir menu principal
         printf("Que desea hacer?\n\n");
@@ -52,18 +47,16 @@ int main(){
         scanf("%d", &mainOpc);
 
         switch(mainOpc){
-        case 1: mesas();
+        case 1: adminMesas();
             break;
-
-        case 2: reservas();
+        case 2: adminReservas();
             break;
-
-        case 3: cobro();
-
-        case 4: inventario();
-
-        case 5: empleados();
-
+        case 3: adminCobro();
+            break;
+        case 4: adminInventario();
+            break;
+        case 5: adminEmpleados();
+            break;
         default:
             break;
         }
@@ -76,30 +69,44 @@ int main(){
 
 //Funciones Principales
 
-void mesas(){
+void adminMesas(){
     int mesaOpc;
-    char meseroOpc;
+    char meseroOpc[25];
     printf("Selecciona una mesa: ");
     scanf("%d", &mesaOpc);
     printf("Asigna un mesero: ");
-    scanf("%c", &meseroOpc);
-    if(mesaOpc >= 0 && mesaOpc <= 30){
-        
+    scanf(" %s", meseroOpc);
+    if(mesaOpc > 0 && mesaOpc <= 30 && buscar(meseroOpc)){
+        mesas[mesaOpc].numMesa = mesaOpc;
+        strcpy(mesas[mesaOpc].mesero, meseroOpc);
     }
 }
 
-void reservas(){
+void adminReservas(){
 
 }
 
-void cobro(){
+void adminCobro(){
 
 }
 
-void inventario(){
+void adminInventario(){
 
 }
 
-void empleados(){
+void adminEmpleados(){
 
+}
+
+
+//Funciones secundarias
+
+bool buscar(char buscarmesero []){
+    int num_meseros = sizeof(meseros) / sizeof(meseros[0]);
+    for(int i = 0; i < num_meseros; i++){
+        if(strcmp(buscarmesero, meseros[i]) == 0){
+            return true;
+        }
+    }
+    return false;
 }
