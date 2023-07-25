@@ -70,20 +70,31 @@ int main(){
 //Funciones Principales
 
 void adminMesas(){
-    int mesaOpc;
+    int mesaOpc = 500;
     char meseroOpc[25];
-    printf("Selecciona una mesa: ");
-    scanf("%d", &mesaOpc);
-    printf("Asigna un mesero: ");
-    scanf(" %s", meseroOpc);
-    if(mesaOpc > 0 && mesaOpc <= 30 && buscar(meseroOpc)){
-        mesas[mesaOpc].numMesa = mesaOpc;
-        strcpy(mesas[mesaOpc].mesero, meseroOpc);
+    while(mesaOpc != 0 && meseroOpc != "0"){
+        int mesaOpc;
+        char meseroOpc[25];
+        printf("Selecciona una mesa: ");
+        scanf("%d", &mesaOpc);
+        printf("Asigna un mesero: ");
+        scanf(" %s", meseroOpc);
+        if(mesaOpc > 0 && mesaOpc <= 30){
+            if(buscar(meseroOpc)){
+                mesas[mesaOpc].numMesa = mesaOpc;
+                strcpy(mesas[mesaOpc].mesero, meseroOpc);
+            } else{
+                printf("El mesero no esta registrado intentalo nuevamente\n\n");
+            }
+        } else{
+            printf("Ingresa una mesa del 1 al 30 unicamente\n\n");
+        }
     }
+
 }
 
 void adminReservas(){
-
+    
 }
 
 void adminCobro(){
