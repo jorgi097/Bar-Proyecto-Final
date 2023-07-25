@@ -15,7 +15,7 @@ void adminEmpleados();
 void altaEmpleado();
 void modificacionEmpleado();
 void bajaEmpleado();
-bool buscar(char buscarempleado []);
+bool buscar(int buscarempleado);
 
 
 void clean();
@@ -44,6 +44,7 @@ typedef struct producto{
 } producto;
 
 typedef struct empleado{
+    bool alta;
     int numEmpleado;
     char nombre[25];
     int edad;
@@ -69,10 +70,10 @@ int mainOpc = 500;
 mesa mesas[15]; //Array con las mesas del bar
 
 empleado empleados[20] = { //Array con todos los empleados
-    {0, "Jon Doe", 0, Noche, Mesero},
-    {1, "Juan", 25, Noche, Cocinero},
-    {2, "Martha", 23, Noche, Mesero},
-    {3, "Yolanda", 21, Noche, Mesero},
+    {false, 0, "Jon Doe", 0, Noche, Mesero},
+    {true, 1, "Juan", 25, Noche, Cocinero},
+    {true, 2, "Martha", 23, Noche, Mesero},
+    {true, 3, "Yolanda", 21, Noche, Mesero},
 };
 
 int empleadosInicializados = 0;
@@ -214,20 +215,11 @@ void adminEmpleados(){ // Menu administración de empleados
 
 
 void altaEmpleado(){
-    char empleadoOpc[25];
-do{
+    int empleadoOpc;
     system("cls");
-    printf("Ingresa el nombre del empleado a dar de alta: ");
+    printf("Hay ");
+    printf("Ingresa un numero de empleado a dar de alta: ");
     scanf("%s", &empleadoOpc);
-
-    if(buscar(empleadoOpc)){
-        printf("El empleado ya esta registrado");
-    }else{
-        empleados[empleadosInicializados + 1].nombre = empleadoOpc;
-    }
-}while()
-    
-
     printf("Ingresa la edad del empleado: ");
     scanf("%s", empleados[empleadosInicializados + 1].edad);
     printf("Ingresa el puesto del empleado: (Mesero | Cocinero | Gerente | Bartender)");
@@ -249,7 +241,7 @@ void bajaEmpleado(){
 // FUnciones terciarias
 int empleadosRegistrados(){
     for(unsigned int i = 1; i < sizeof(empleados) / sizeof(empleados[0]); i++){
-        if(empleados[i].nombre[0] != '\0'){
+        if(empleados[i].numEmpleado != 0){
             empleadosInicializados++;
             return empleadosInicializados;
         }
@@ -257,16 +249,12 @@ int empleadosRegistrados(){
 }
 
 
-bool buscar(char buscarempleado []){ // Busca si un empleado existe
-    int num_meseros = sizeof(empleados) / sizeof(empleados[0]);
+bool buscar(int numEmpleado){ // Busca si un empleado existe al tener un numero de empleado distinto de 0
+    int numEmpleados = sizeof(empleados) / sizeof(empleados[0]);
 
-    for(int i = 1; i < num_meseros; i++){
-        if(strcmp(buscarempleado, empleados[i].nombre) == 0){
-            return true;
-        }
+    for(int i = 1; i < numEmpleados; i++){
+        return empleados[i].alta;
     }
-
-    return false;
 }
 
 
