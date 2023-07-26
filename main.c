@@ -22,6 +22,7 @@ void modificacionProducto();
 void bajaProducto();
 void numProductosRegistrados();
 void printProductos();
+void printEmpleados();
 
 bool buscar(int buscarempleado);
 void clean();
@@ -108,7 +109,7 @@ mesa mesas[30]; //Array con las mesas del bar
 int main(){ //--------------------------------------------------------
     while(mainOpc != 0){ //Imprimir menu principal
         system("cls");
-        
+
         printf("Que deseas administrar?\n\n");
         printf("1) Mesas\n");
         printf("2) Cuentas\n");
@@ -202,16 +203,7 @@ void adminEmpleados(){ // Menu administración de empleados
 
         system("cls");
 
-        printf("Hay %d empleados dados de alta en este momento\n\n", numEmpleadosAlta);
-
-        printf("TURNO: Matutino = 1 | Vespertino = 2 | Nocturno = 3\n\nPUESTO: Mesero = 1 | Cocinero = 2 | Gerente = 3 | Bartender = 4\n\n");
-
-        printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |\n");
-        for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
-            if(empleados[i].alta){
-                printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
-            }
-        }
+        printEmpleados();
 
         printf("\nQue deseas hacer?\n\n");
         printf("1) Alta empleado\n");
@@ -263,7 +255,7 @@ void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE 
     scanf("%d", &numeroProductoOpc);
 
     while(modificarOpc != 0){
-        printf("Que deseas modificar de %s?\n", productos[numeroProductoOpc-1].nombre);
+        printf("Que deseas modificar de %s?\n", productos[numeroProductoOpc - 1].nombre);
         printf("1) Nombre\n");
         printf("2) Precio\n");
         printf("0) Regresar\n");
@@ -273,12 +265,12 @@ void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE 
         switch(modificarOpc){
         case 1:
             printf("\nIngresa el nombre del producto: \n");
-            scanf("%s", productos[numeroProductoOpc-1].nombre);
+            scanf("%s", productos[numeroProductoOpc - 1].nombre);
             printf("Cambio ralizado\n\n");
             break;
         case 2:
             printf("\nIngresa la edad del empleado: ");
-            scanf("%f", &productos[numeroProductoOpc-1].precio);
+            scanf("%f", &productos[numeroProductoOpc - 1].precio);
             printf("Cambio ralizado\n\n");
             break;
 
@@ -298,13 +290,17 @@ void bajaProducto(){ //AGREGAR NO DAR DE BAJA PRODUCTOS DADOS DE BAJA
     printf("\nIngresa el numero de producto a dar de baja: \n");
     scanf("%d", &numeroProductoOpc);
 
-    productos[numeroProductoOpc-1].alta = false;
+    productos[numeroProductoOpc - 1].alta = false;
 }
 
 //--------------------------------------------------------------------
 
 void altaEmpleado(){ // AGREGAR DAR DE ALTA EMPLEADOS PREVIAMENTE DADOS DE BAJA
-    printf("Ingresa el nombre del empleado a dar de alta: ");
+    system("cls");
+    
+    printEmpleados();
+
+    printf("\nIngresa el nombre del empleado a dar de alta: ");
     scanf("%s", empleados[numEmpleadosIdUsados + 1].nombre);
 
     printf("Ingresa la edad del empleado a dar de alta: ");
@@ -325,11 +321,13 @@ void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
 
     system("cls");
 
-    printf("Ingresa el numero de empleado del empleado a modificar: \n");
+    printEmpleados();
+
+    printf("\nIngresa el numero de empleado del empleado a modificar: \n");
     scanf("%d", &numeroEmpleadoOpc);
 
     while(modificarOpc != 0){
-        printf("Que deseas modificar de %s?\n", empleados[numeroEmpleadoOpc-1].nombre);
+        printf("Que deseas modificar de %s?\n", empleados[numeroEmpleadoOpc - 1].nombre);
         printf("1) Nombre\n");
         printf("2) Edad\n");
         printf("3) Turno\n");
@@ -341,22 +339,22 @@ void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
         switch(modificarOpc){
         case 1:
             printf("\nIngresa el nombre del empleado: \n");
-            scanf("%s", empleados[numeroEmpleadoOpc-1].nombre);
+            scanf("%s", empleados[numeroEmpleadoOpc - 1].nombre);
             printf("Cambio ralizado\n\n");
             break;
         case 2:
             printf("\nIngresa la edad del empleado: ");
-            scanf("%d", &empleados[numeroEmpleadoOpc-1].edad);
+            scanf("%d", &empleados[numeroEmpleadoOpc - 1].edad);
             printf("Cambio ralizado\n\n");
             break;
         case 3:
             printf("\nIngresa el turno del empleado (1: Matutino, 2: Vespertino, 3: Nocturno): \n");
-            scanf("%d", (int*)&empleados[numeroEmpleadoOpc-1].turno);
+            scanf("%d", (int*)&empleados[numeroEmpleadoOpc - 1].turno);
             printf("Cambio ralizado\n\n");
             break;
         case 4:
             printf("\nIngresa el puesto del empleado(1: Mesero, 2: Cocinero, 3: Gerente, 4: Bartender): \n");
-            scanf("%d", (int*)&empleados[numeroEmpleadoOpc-1].puesto);
+            scanf("%d", (int*)&empleados[numeroEmpleadoOpc - 1].puesto);
             printf("Cambio ralizado\n\n");
             break;
 
@@ -372,10 +370,12 @@ void bajaEmpleado(){ //Da de baja logica a empleados
 
     system("cls");
 
-    printf("Ingresa el numero de empleado a dar de baja: \n");
+    printEmpleados();
+
+    printf("\nIngresa el numero de empleado a dar de baja: \n");
     scanf("%d", &numeroEmpleadoOpc);
 
-    empleados[numeroEmpleadoOpc-1].alta = false;
+    empleados[numeroEmpleadoOpc - 1].alta = false;
 }
 
 
@@ -425,10 +425,21 @@ void printProductos(){
     }
 }
 
-bool buscar(int numEmpleado){ // Busca si un empleado esta dado de alta segun su numero de empleado
-    int numEmpleados = sizeof(empleados) / sizeof(empleados[1]);
+void printEmpleados(){
+    printf("Hay %d empleados dados de alta en este momento\n\n", numEmpleadosAlta);
 
-    for(int i = 0; i < numEmpleados; i++){
+    printf("TURNO: Matutino = 1 | Vespertino = 2 | Nocturno = 3\n\nPUESTO: Mesero = 1 | Cocinero = 2 | Gerente = 3 | Bartender = 4\n\n");
+
+    printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |\n");
+    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
+        if(empleados[i].alta){
+            printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
+        }
+    }
+}
+
+bool buscar(int numEmpleado){ // Busca si un empleado esta dado de alta segun su numero de empleado
+    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
         if(empleados[i].id == numEmpleado && empleados[i].alta){
             return true;
         }
