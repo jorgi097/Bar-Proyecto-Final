@@ -52,7 +52,7 @@ typedef struct producto{
 
 typedef struct empleado{
     bool alta;
-    int numEmpleado;
+    int id;
     char nombre[25];
     int edad;
     enum turno turno;
@@ -79,7 +79,8 @@ empleado empleados[20] = { //Array con todos los empleados
     {true, 3, "Yolanda", 21, 3, Mesero},
 };
 
-int numEmpleadosUsados = 0;
+int numEmpleadosAlta = 0;
+int numEmpleadosIdUsados = 0;
 int numProductosAlta = 0;
 int numIdUsados = 0;
 
@@ -105,9 +106,9 @@ producto productos[50] = {
 mesa mesas[30]; //Array con las mesas del bar
 
 int main(){ //--------------------------------------------------------
-    printf("\n");
-
     while(mainOpc != 0){ //Imprimir menu principal
+        system("cls");
+        
         printf("Que deseas administrar?\n\n");
         printf("1) Mesas\n");
         printf("2) Cuentas\n");
@@ -201,14 +202,14 @@ void adminEmpleados(){ // Menu administración de empleados
 
         system("cls");
 
-        printf("Hay %d empleados dados de alta en este momento\n\n", numEmpleadosUsados);
+        printf("Hay %d empleados dados de alta en este momento\n\n", numEmpleadosAlta);
 
         printf("TURNO: Matutino = 1 | Vespertino = 2 | Nocturno = 3\n\nPUESTO: Mesero = 1 | Cocinero = 2 | Gerente = 3 | Bartender = 4\n\n");
 
         printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |\n");
         for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
             if(empleados[i].alta){
-                printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].numEmpleado, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
+                printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
             }
         }
 
@@ -304,19 +305,19 @@ void bajaProducto(){ //AGREGAR NO DAR DE BAJA PRODUCTOS DADOS DE BAJA
 
 void altaEmpleado(){ // AGREGAR DAR DE ALTA EMPLEADOS PREVIAMENTE DADOS DE BAJA
     printf("Ingresa el nombre del empleado a dar de alta: ");
-    scanf("%s", empleados[numEmpleadosUsados + 1].nombre);
+    scanf("%s", empleados[numEmpleadosIdUsados + 1].nombre);
 
     printf("Ingresa la edad del empleado a dar de alta: ");
-    scanf("%d", &empleados[numEmpleadosUsados + 1].edad);
+    scanf("%d", &empleados[numEmpleadosIdUsados + 1].edad);
 
     printf("Ingresa el turno del empleado a dar de alta (1: Matutino, 2: Vespertino, 3: Nocturno): ");
-    scanf("%d", (int*)&empleados[numEmpleadosUsados + 1].turno);
+    scanf("%d", (int*)&empleados[numEmpleadosIdUsados + 1].turno);
 
     printf("Ingresa el puesto del empleado a dar de alta (1: Mesero, 2: Cocinero, 3: Gerente, 4: Bartender): ");
-    scanf("%d", (int*)&empleados[numEmpleadosUsados + 1].puesto);
+    scanf("%d", (int*)&empleados[numEmpleadosIdUsados + 1].puesto);
 
-    empleados[numEmpleadosUsados + 1].alta = true;
-    empleados[numEmpleadosUsados + 1].numEmpleado = numEmpleadosUsados + 1;
+    empleados[numEmpleadosIdUsados + 1].alta = true;
+    empleados[numEmpleadosIdUsados + 1].id = numEmpleadosIdUsados + 1;
 }
 
 void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
@@ -328,7 +329,7 @@ void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
     scanf("%d", &numeroEmpleadoOpc);
 
     while(modificarOpc != 0){
-        printf("Que deseas modificar de %s?\n", empleados[numeroEmpleadoOpc].nombre);
+        printf("Que deseas modificar de %s?\n", empleados[numeroEmpleadoOpc-1].nombre);
         printf("1) Nombre\n");
         printf("2) Edad\n");
         printf("3) Turno\n");
@@ -340,22 +341,22 @@ void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
         switch(modificarOpc){
         case 1:
             printf("\nIngresa el nombre del empleado: \n");
-            scanf("%s", empleados[numeroEmpleadoOpc].nombre);
+            scanf("%s", empleados[numeroEmpleadoOpc-1].nombre);
             printf("Cambio ralizado\n\n");
             break;
         case 2:
             printf("\nIngresa la edad del empleado: ");
-            scanf("%d", &empleados[numeroEmpleadoOpc].edad);
+            scanf("%d", &empleados[numeroEmpleadoOpc-1].edad);
             printf("Cambio ralizado\n\n");
             break;
         case 3:
             printf("\nIngresa el turno del empleado (1: Matutino, 2: Vespertino, 3: Nocturno): \n");
-            scanf("%d", (int*)&empleados[numeroEmpleadoOpc].turno);
+            scanf("%d", (int*)&empleados[numeroEmpleadoOpc-1].turno);
             printf("Cambio ralizado\n\n");
             break;
         case 4:
             printf("\nIngresa el puesto del empleado(1: Mesero, 2: Cocinero, 3: Gerente, 4: Bartender): \n");
-            scanf("%d", (int*)&empleados[numeroEmpleadoOpc].puesto);
+            scanf("%d", (int*)&empleados[numeroEmpleadoOpc-1].puesto);
             printf("Cambio ralizado\n\n");
             break;
 
@@ -374,17 +375,24 @@ void bajaEmpleado(){ //Da de baja logica a empleados
     printf("Ingresa el numero de empleado a dar de baja: \n");
     scanf("%d", &numeroEmpleadoOpc);
 
-    empleados[numeroEmpleadoOpc].alta = false;
+    empleados[numeroEmpleadoOpc-1].alta = false;
 }
 
 
 // FUnciones terciarias-----------------------------------------------
 void numEmpleadosRegistrados(){
-    numEmpleadosUsados = 0;
+    numEmpleadosAlta = 0;
+    numEmpleadosIdUsados = 0;
 
     for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
-        if(empleados[i].numEmpleado != 0){
-            numEmpleadosUsados++;
+        if(empleados[i].alta){
+            numEmpleadosAlta++;
+        }
+    }
+
+    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
+        if(empleados[i].id != 0){
+            numEmpleadosIdUsados++;
         }
     }
 }
@@ -421,7 +429,7 @@ bool buscar(int numEmpleado){ // Busca si un empleado esta dado de alta segun su
     int numEmpleados = sizeof(empleados) / sizeof(empleados[1]);
 
     for(int i = 0; i < numEmpleados; i++){
-        if(empleados[i].numEmpleado == numEmpleado && empleados[i].alta){
+        if(empleados[i].id == numEmpleado && empleados[i].alta){
             return true;
         }
     }
