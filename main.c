@@ -59,13 +59,13 @@ typedef struct empleado{
 } empleado;
 
 typedef struct cuenta{
-    producto productos[100];
+    producto cuentaProductos[100];
 } cuenta;
 
 typedef struct mesa{
     int numMesa;
-    empleado mesero[1];
-    cuenta cuentaMesa[1];
+    empleado mesaMesero[1];
+    cuenta mesaCuenta[1];
 } mesa;
 
 
@@ -73,7 +73,6 @@ typedef struct mesa{
 int mainOpc = 500;
 
 empleado empleados[20] = { //Array con todos los empleados
-    {false, 0, " ", 0, 0, 0},
     {true, 1, "Juan", 25, Nocturno, Mesero},
     {true, 2, "Marta", 23, 3, Mesero},
     {true, 3, "Yolanda", 21, 3, Mesero},
@@ -84,7 +83,6 @@ int numProductosUsados = 0;
 int numIdUsados = 0;
 
 producto productos[50] = {
-    {false, 0, "", 0},
     {true, 1, "Papas", 30},
     {true, 2, "Hotdog", 35},
     {true, 3, "Hamburguesa", 65},
@@ -153,55 +151,7 @@ int main(){ //--------------------------------------------------------
 
 //Funciones Principales-----------------------------------------------
 void adminMesas(){ //Asigna mesas a meseros
-    int mesaOpc = 500;
-    int meseroOpc = 500;
-
-
-
-    while(true){
-        system("cls");
-        printf(" NUMERO DE EMPLEADO |         NOMBRE |\n");
-        for(unsigned int i = 1; i < (sizeof(empleados) / sizeof(empleados[0])) - 1; i++){
-            if(empleados[i].alta){
-                printf("%19u | %14s |\n", empleados[i].numEmpleado, empleados[i].nombre);
-            }
-        }
-
-        for(unsigned int i = 1; i < sizeof(mesas) / sizeof(mesas[0]); i++){
-            if(mesas[i].mesero[0].nombre[0] != '\0' && mesas[i].mesero[0].puesto == Mesero){
-                printf("La mesa %u tiene asignado al mesero: %s\n", i, mesas[i].mesero[0].nombre);
-            }
-        }
-        if(mesas[1].mesero[0].nombre[0] != '\0'){
-            printf("\n");
-        }
-
-        printf("Selecciona una mesa (1-%d): ", sizeof(mesas) / sizeof(mesas[0]));
-
-        scanf("%d", &mesaOpc);
-        if(mesaOpc == 0){
-            break;
-        }
-
-        printf("Asigna un mesero: ");
-
-        scanf("%d", &meseroOpc);
-        if(meseroOpc == 0){
-            break;
-        }
-
-        if(mesaOpc > 0 && mesaOpc <= 30){
-            if(buscar(meseroOpc)){ //Revisa si el mesero esta registrado
-                mesas[mesaOpc].numMesa = mesaOpc;
-                mesas[mesaOpc].mesero[0].numEmpleado = meseroOpc;
-            } else{
-                printf("El mesero no esta registrado intentalo nuevamente\n\n");
-            }
-        } else{
-            printf("Ingresa una mesa del 1 al 30 unicamente\n\n");
-        }
-    }
-
+    
 }
 
 void adminCuenta(){ // Menu administración de cuentas
@@ -253,7 +203,7 @@ void adminEmpleados(){ // Menu administración de empleados
         printf("TURNO: Matutino = 1 | Vespertino = 2 | Nocturno = 3\n\nPUESTO: Mesero = 1 | Cocinero = 2 | Gerente = 3 | Bartender = 4\n\n");
 
         printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |\n");
-        for(unsigned int i = 1; i < (sizeof(empleados) / sizeof(empleados[0])) - 1; i++){
+        for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[0]); i++){
             if(empleados[i].alta){
                 printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].numEmpleado, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
             }
@@ -289,7 +239,7 @@ void altaProducto(){ //AGREGAR DAR DE ALTA PRODUCTOS DADOS DE BAJA ANTERIORMENTE
     printf("El numero de productos registrados es: %d\n\n", numProductosUsados);
 
     printf(" ID |          NOMBRE |  PRECIO |\n");
-    for(unsigned int i = 1; i < (sizeof(productos) / sizeof(productos[0])) - 1; i++){
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
         if(productos[i].alta){
             printf("%3d |%16s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
         }
@@ -313,7 +263,7 @@ void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE 
     printf("El numero de productos registrados es: %d\n\n", numProductosUsados);
 
     printf(" ID |          NOMBRE |  PRECIO |\n");
-    for(unsigned int i = 1; i < (sizeof(productos) / sizeof(productos[0])) - 1; i++){
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
         if(productos[i].alta){
             printf("%3d |%16s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
         }
@@ -356,7 +306,7 @@ void bajaProducto(){ //AGREGAR NO DAR DE BAJA PRODUCTOS DADOS DE BAJA
     printf("El numero de productos registrados es: %d\n\n", numProductosUsados);
 
     printf(" ID |          NOMBRE |  PRECIO |\n");
-    for(unsigned int i = 1; i < (sizeof(productos) / sizeof(productos[0])) - 1; i++){
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
         if(productos[i].alta){
             printf("%3d |%16s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
         }
@@ -450,7 +400,7 @@ void bajaEmpleado(){ //Da de baja logica a empleados
 void numEmpleadosRegistrados(){
     numEmpleadosUsados = 0;
 
-    for(unsigned int i = 1; i < (sizeof(empleados) / sizeof(empleados[0])) - 1; i++){
+    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[0]); i++){
         if(empleados[i].numEmpleado != 0){
             numEmpleadosUsados++;
         }
@@ -461,13 +411,13 @@ void numProductosRegistrados(){
     numProductosUsados = 0; // Resetea a 0
     numIdUsados = 0; // Resetea a 0
 
-    for(unsigned int i = 1; i < (sizeof(productos) / sizeof(productos[0])) - 1; i++){ // Guarda cuantos productos estan dados de alta
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){ // Guarda cuantos productos estan dados de alta
         if(productos[i].alta){
             numProductosUsados++;
         }
     }
 
-    for(unsigned int i = 1; i < (sizeof(productos) / sizeof(productos[0])) - 1; i++){ // Guarda cuantos ID estan usados
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){ // Guarda cuantos ID estan usados
         if(productos[i].id != 0){
             numIdUsados++;
         }
@@ -477,7 +427,7 @@ void numProductosRegistrados(){
 bool buscar(int numEmpleado){ // Busca si un empleado esta dado de alta segun su numero de empleado
     int numEmpleados = (sizeof(empleados) / sizeof(empleados[0])) - 1;
 
-    for(int i = 1; i < numEmpleados; i++){
+    for(int i = 0; i < numEmpleados; i++){
         if(empleados[i].numEmpleado == numEmpleado && empleados[i].alta){
             return true;
         }
