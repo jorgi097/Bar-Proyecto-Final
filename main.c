@@ -21,6 +21,7 @@ void altaProducto();
 void modificacionProducto();
 void bajaProducto();
 void numProductosRegistrados();
+void printProductos();
 
 bool buscar(int buscarempleado);
 void clean();
@@ -79,7 +80,7 @@ empleado empleados[20] = { //Array con todos los empleados
 };
 
 int numEmpleadosUsados = 0;
-int numProductosUsados = 0;
+int numProductosAlta = 0;
 int numIdUsados = 0;
 
 producto productos[50] = {
@@ -105,8 +106,7 @@ mesa mesas[30]; //Array con las mesas del bar
 
 int main(){ //--------------------------------------------------------
     printf("\n");
-    int hola = sizeof(productos) / sizeof(productos[1]);
-    printf("%d", hola);
+
     while(mainOpc != 0){ //Imprimir menu principal
         printf("Que deseas administrar?\n\n");
         printf("1) Mesas\n");
@@ -151,7 +151,7 @@ int main(){ //--------------------------------------------------------
 
 //Funciones Principales-----------------------------------------------
 void adminMesas(){ //Asigna mesas a meseros
-    
+
 }
 
 void adminCuenta(){ // Menu administración de cuentas
@@ -167,7 +167,10 @@ void adminInventario(){ // Menu administración de inventario
 
     while(adminInventarioOpc != 0){
         numProductosRegistrados();
+
         system("cls");
+
+        printProductos();
 
         printf("\nQue deseas hacer?\n\n");
         printf("1) Alta producto\n");
@@ -194,8 +197,8 @@ void adminEmpleados(){ // Menu administración de empleados
     int adminEmpleadosOpc;
 
     while(adminEmpleadosOpc != 0){
-
         numEmpleadosRegistrados();
+
         system("cls");
 
         printf("Hay %d empleados dados de alta en este momento\n\n", numEmpleadosUsados);
@@ -203,7 +206,7 @@ void adminEmpleados(){ // Menu administración de empleados
         printf("TURNO: Matutino = 1 | Vespertino = 2 | Nocturno = 3\n\nPUESTO: Mesero = 1 | Cocinero = 2 | Gerente = 3 | Bartender = 4\n\n");
 
         printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |\n");
-        for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[0]); i++){
+        for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
             if(empleados[i].alta){
                 printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].numEmpleado, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
             }
@@ -236,14 +239,7 @@ void adminEmpleados(){ // Menu administración de empleados
 void altaProducto(){ //AGREGAR DAR DE ALTA PRODUCTOS DADOS DE BAJA ANTERIORMENTE
     system("cls");
 
-    printf("El numero de productos registrados es: %d\n\n", numProductosUsados);
-
-    printf(" ID |          NOMBRE |  PRECIO |\n");
-    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
-        if(productos[i].alta){
-            printf("%3d |%16s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
-        }
-    }
+    printProductos();
 
     printf("\nIngresa el nombre del producto a dar de alta: ");
     scanf("%s", productos[numIdUsados + 1].nombre);
@@ -260,20 +256,13 @@ void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE 
 
     system("cls");
 
-    printf("El numero de productos registrados es: %d\n\n", numProductosUsados);
-
-    printf(" ID |          NOMBRE |  PRECIO |\n");
-    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
-        if(productos[i].alta){
-            printf("%3d |%16s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
-        }
-    }
+    printProductos();
 
     printf("\nIngresa el numero de producto a modificar: \n");
     scanf("%d", &numeroProductoOpc);
 
     while(modificarOpc != 0){
-        printf("Que deseas modificar de %s?\n", productos[numeroProductoOpc].nombre);
+        printf("Que deseas modificar de %s?\n", productos[numeroProductoOpc-1].nombre);
         printf("1) Nombre\n");
         printf("2) Precio\n");
         printf("0) Regresar\n");
@@ -283,12 +272,12 @@ void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE 
         switch(modificarOpc){
         case 1:
             printf("\nIngresa el nombre del producto: \n");
-            scanf("%s", productos[numeroProductoOpc].nombre);
+            scanf("%s", productos[numeroProductoOpc-1].nombre);
             printf("Cambio ralizado\n\n");
             break;
         case 2:
             printf("\nIngresa la edad del empleado: ");
-            scanf("%f", &productos[numeroProductoOpc].precio);
+            scanf("%f", &productos[numeroProductoOpc-1].precio);
             printf("Cambio ralizado\n\n");
             break;
 
@@ -303,19 +292,12 @@ void bajaProducto(){ //AGREGAR NO DAR DE BAJA PRODUCTOS DADOS DE BAJA
 
     system("cls");
 
-    printf("El numero de productos registrados es: %d\n\n", numProductosUsados);
-
-    printf(" ID |          NOMBRE |  PRECIO |\n");
-    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
-        if(productos[i].alta){
-            printf("%3d |%16s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
-        }
-    }
+    printProductos();
 
     printf("\nIngresa el numero de producto a dar de baja: \n");
     scanf("%d", &numeroProductoOpc);
 
-    productos[numeroProductoOpc].alta = false;
+    productos[numeroProductoOpc-1].alta = false;
 }
 
 //--------------------------------------------------------------------
@@ -400,7 +382,7 @@ void bajaEmpleado(){ //Da de baja logica a empleados
 void numEmpleadosRegistrados(){
     numEmpleadosUsados = 0;
 
-    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[0]); i++){
+    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
         if(empleados[i].numEmpleado != 0){
             numEmpleadosUsados++;
         }
@@ -408,24 +390,35 @@ void numEmpleadosRegistrados(){
 }
 
 void numProductosRegistrados(){
-    numProductosUsados = 0; // Resetea a 0
+    numProductosAlta = 0; // Resetea a 0
     numIdUsados = 0; // Resetea a 0
 
-    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){ // Guarda cuantos productos estan dados de alta
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // Guarda cuantos productos estan dados de alta
         if(productos[i].alta){
-            numProductosUsados++;
+            numProductosAlta++;
         }
     }
 
-    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){ // Guarda cuantos ID estan usados
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // Guarda cuantos ID estan usados
         if(productos[i].id != 0){
             numIdUsados++;
         }
     }
 }
 
+void printProductos(){
+    printf("El numero de productos registrados es: %d\n\n", numProductosAlta);
+
+    printf(" ID |          NOMBRE |  PRECIO |\n");
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){
+        if(productos[i].alta){
+            printf("%3d |%16s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
+        }
+    }
+}
+
 bool buscar(int numEmpleado){ // Busca si un empleado esta dado de alta segun su numero de empleado
-    int numEmpleados = (sizeof(empleados) / sizeof(empleados[0])) - 1;
+    int numEmpleados = sizeof(empleados) / sizeof(empleados[1]);
 
     for(int i = 0; i < numEmpleados; i++){
         if(empleados[i].numEmpleado == numEmpleado && empleados[i].alta){
