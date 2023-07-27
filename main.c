@@ -24,7 +24,8 @@ void numProductosRegistrados();
 void printProductos();
 void printEmpleados();
 
-bool buscar(int buscarempleado);
+bool buscarEmp(int buscarempleado);
+bool buscarProd(int numProd);
 void clean();
 
 
@@ -264,12 +265,12 @@ void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE 
 
         switch(modificarOpc){
         case 1:
-            printf("\nIngresa el nombre del producto: \n");
+            printf("\nIngresa el nurvo nombre del producto: %s\n", productos[numeroProductoOpc - 1].nombre);
             scanf("%s", productos[numeroProductoOpc - 1].nombre);
             printf("Cambio ralizado\n\n");
             break;
         case 2:
-            printf("\nIngresa la edad del empleado: ");
+            printf("\nIngresa el nuevo precio de: %s\n", productos[numeroProductoOpc - 1].nombre);
             scanf("%f", &productos[numeroProductoOpc - 1].precio);
             printf("Cambio ralizado\n\n");
             break;
@@ -290,14 +291,20 @@ void bajaProducto(){ //AGREGAR NO DAR DE BAJA PRODUCTOS DADOS DE BAJA
     printf("\nIngresa el numero de producto a dar de baja: \n");
     scanf("%d", &numeroProductoOpc);
 
-    productos[numeroProductoOpc - 1].alta = false;
+    if(buscarProd(numeroProductoOpc)){
+        for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){
+            if(productos[i].id == numeroProductoOpc){
+                productos[i].alta = false;
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------------
 
 void altaEmpleado(){ // AGREGAR DAR DE ALTA EMPLEADOS PREVIAMENTE DADOS DE BAJA
     system("cls");
-    
+
     printEmpleados();
 
     printf("\nIngresa el nombre del empleado a dar de alta: ");
@@ -314,6 +321,7 @@ void altaEmpleado(){ // AGREGAR DAR DE ALTA EMPLEADOS PREVIAMENTE DADOS DE BAJA
 
     empleados[numEmpleadosIdUsados + 1].alta = true;
     empleados[numEmpleadosIdUsados + 1].id = numEmpleadosIdUsados + 1;
+
 }
 
 void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
@@ -375,11 +383,16 @@ void bajaEmpleado(){ //Da de baja logica a empleados
     printf("\nIngresa el numero de empleado a dar de baja: \n");
     scanf("%d", &numeroEmpleadoOpc);
 
-    empleados[numeroEmpleadoOpc - 1].alta = false;
+    if(buscarEmp(numeroEmpleadoOpc)){
+        for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
+            if(empleados[i].id == numeroEmpleadoOpc){
+                empleados[i].alta = false;
+            }
+        }
+    }
 }
 
-
-// FUnciones terciarias-----------------------------------------------
+    // FUnciones terciarias-----------------------------------------------
 void numEmpleadosRegistrados(){
     numEmpleadosAlta = 0;
     numEmpleadosIdUsados = 0;
@@ -430,17 +443,26 @@ void printEmpleados(){
 
     printf("TURNO: Matutino = 1 | Vespertino = 2 | Nocturno = 3\n\nPUESTO: Mesero = 1 | Cocinero = 2 | Gerente = 3 | Bartender = 4\n\n");
 
-    printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |\n");
+    printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |    ALTA\n");
     for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
         if(empleados[i].alta){
-            printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
+            printf("%19d | %14s |%9d |%10d |%11d |%8d\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto, empleados[i].alta);
         }
     }
 }
 
-bool buscar(int numEmpleado){ // Busca si un empleado esta dado de alta segun su numero de empleado
+bool buscarEmp(int numEmpleado){ // Busca si un empleado esta dado de alta segun su numero de empleado
     for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
         if(empleados[i].id == numEmpleado && empleados[i].alta){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool buscarProd(int numProd){ // Busca si un empleado esta dado de alta segun su numero de empleado
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){
+        if(productos[i].id == numProd && productos[i].alta){
             return true;
         }
     }
