@@ -10,22 +10,23 @@ void adminCobro();
 void adminInventario();
 void adminEmpleados();
 
-
 void altaEmpleado();
 void modificacionEmpleado();
 void bajaEmpleado();
-void numEmpleadosRegistrados();
-
 
 void altaProducto();
 void modificacionProducto();
 void bajaProducto();
-void numProductosRegistrados();
+
 void printProductos();
 void printEmpleados();
 
+void numProductosRegistrados();
+void numEmpleadosRegistrados();
+
 bool buscarEmp(int buscarempleado);
 bool buscarProd(int numProd);
+
 void clean();
 
 
@@ -73,18 +74,17 @@ typedef struct mesa{
 
 
 //Variables Globales--------------------------------------------------
-int mainOpc = 500;
+int numEmpleadosAlta = 0;
+int numEmpleadosIdUsados = 0;
+
+int numProductosAlta = 0;
+int numProductosIdUsados = 0;
 
 empleado empleados[20] = { //Array con todos los empleados
     {true, 1, "Juan", 25, Nocturno, Mesero},
     {true, 2, "Marta", 23, 3, Mesero},
     {true, 3, "Yolanda", 21, 3, Mesero},
 };
-
-int numEmpleadosAlta = 0;
-int numEmpleadosIdUsados = 0;
-int numProductosAlta = 0;
-int numIdUsados = 0;
 
 producto productos[50] = {
     {true, 1, "Papas", 30},
@@ -108,6 +108,8 @@ producto productos[50] = {
 mesa mesas[30]; //Array con las mesas del bar
 
 int main(){ //--------------------------------------------------------
+    int mainOpc;
+    
     while(mainOpc != 0){ //Imprimir menu principal
         system("cls");
 
@@ -225,27 +227,26 @@ void adminEmpleados(){ // Menu administración de empleados
             break;
         }
     }
-
 }
 
 
 //Funciones secundarias-----------------------------------------------
-void altaProducto(){ //AGREGAR DAR DE ALTA PRODUCTOS DADOS DE BAJA ANTERIORMENTE
+void altaProducto(){ // Da de alta un nuevo produto
     system("cls");
 
     printProductos();
 
     printf("\nIngresa el nombre del producto a dar de alta: ");
-    scanf("%s", productos[numIdUsados + 1].nombre);
+    scanf("%s", productos[numProductosIdUsados + 1].nombre);
 
     printf("Ingresa el precio del producto a dar de alta: ");
-    scanf("%f", &productos[numIdUsados + 1].precio);
+    scanf("%f", &productos[numProductosIdUsados + 1].precio);
 
-    productos[numIdUsados + 1].alta = true;
-    productos[numIdUsados + 1].id = numIdUsados + 1;
+    productos[numProductosIdUsados + 1].alta = true;
+    productos[numProductosIdUsados + 1].id = numProductosIdUsados + 1;
 }
 
-void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE BAJA
+void modificacionProducto(){ // Modifica las propiedades de los productos
     int numeroProductoOpc, modificarOpc;
 
     system("cls");
@@ -255,29 +256,42 @@ void modificacionProducto(){ //AGREGAR NO PERMITIR MODIFICAR PRODUCTOS DADOS DE 
     printf("\nIngresa el numero de producto a modificar: \n");
     scanf("%d", &numeroProductoOpc);
 
-    while(modificarOpc != 0){
-        printf("Que deseas modificar de %s?\n", productos[numeroProductoOpc - 1].nombre);
-        printf("1) Nombre\n");
-        printf("2) Precio\n");
-        printf("0) Regresar\n");
 
-        scanf("%d", &modificarOpc);
+    if(buscarProd(numeroProductoOpc)){ // Si el producto esta dado de alta
+        for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[i]); i++){
+            if(productos[i].id == numeroProductoOpc){
+                while(modificarOpc != 0){
+                    printf("\nQue deseas modificar de %s?\n", productos[i].nombre);
+                    printf("1) Nombre\n");
+                    printf("2) Precio\n");
+                    printf("0) Regresar\n");
 
-        switch(modificarOpc){
-        case 1:
-            printf("\nIngresa el nurvo nombre del producto: %s\n", productos[numeroProductoOpc - 1].nombre);
-            scanf("%s", productos[numeroProductoOpc - 1].nombre);
-            printf("Cambio ralizado\n\n");
-            break;
-        case 2:
-            printf("\nIngresa el nuevo precio de: %s\n", productos[numeroProductoOpc - 1].nombre);
-            scanf("%f", &productos[numeroProductoOpc - 1].precio);
-            printf("Cambio ralizado\n\n");
-            break;
+                    scanf("%d", &modificarOpc);
 
-        default:
-            break;
+                    switch(modificarOpc){
+                    case 1:
+                        printf("\nIngresa el nuevo nombre del producto: %s\n", productos[i].nombre);
+                        scanf("%s", productos[i].nombre);
+                        system("cls");
+                        printProductos();
+                        break;
+                    case 2:
+                        printf("\nIngresa el nuevo precio de: %s\n", productos[i].nombre);
+                        scanf("%f", &productos[i].precio);
+                        system("cls");
+                        printProductos();
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
+            }
         }
+    } else{
+        printf("-----Ingrese un producto registrado-----\n\nPresione una tecla para continuar\n");
+        clean();
+        getchar();
     }
 }
 
@@ -322,7 +336,6 @@ void altaEmpleado(){ // Da de alta un nuevo empleado
     } while(empleados[numEmpleadosIdUsados + 1].turno < 1 || empleados[numEmpleadosIdUsados + 1].turno > 3); // Verifica que sea un turno valido
 
     do{
-
         printf("Ingresa el puesto del empleado a dar de alta (1: Mesero, 2: Cocinero, 3: Gerente, 4: Bartender): \n");
         scanf("%d", (int*)&empleados[numEmpleadosIdUsados + 1].puesto);
         if(empleados[numEmpleadosIdUsados + 1].puesto < 1 || empleados[numEmpleadosIdUsados + 1].puesto > 4){
@@ -332,7 +345,6 @@ void altaEmpleado(){ // Da de alta un nuevo empleado
 
     empleados[numEmpleadosIdUsados + 1].alta = true;
     empleados[numEmpleadosIdUsados + 1].id = numEmpleadosIdUsados + 1;
-
 }
 
 void modificacionEmpleado(){ // Modifica las propiedades de los empleados
@@ -401,6 +413,10 @@ void modificacionEmpleado(){ // Modifica las propiedades de los empleados
                 }
             }
         }
+    } else{
+        printf("-----Ingrese un empleado registrado-----\n\nPresione una tecla para continuar\n");
+        clean();
+        getchar();
     }
 }
 
@@ -443,7 +459,7 @@ void numEmpleadosRegistrados(){ // Guarda en las variables cuantos empleados est
 
 void numProductosRegistrados(){ // Guarda en las variables cuantos productos estan actualmente dados de alta y los IDs usados hasta el momento
     numProductosAlta = 0;
-    numIdUsados = 0;
+    numProductosIdUsados = 0;
 
     for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // Productos dados de alta actualmente
         if(productos[i].alta){
@@ -453,7 +469,7 @@ void numProductosRegistrados(){ // Guarda en las variables cuantos productos est
 
     for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // IDs usados al momento
         if(productos[i].id != 0){
-            numIdUsados++;
+            numProductosIdUsados++;
         }
     }
 }
