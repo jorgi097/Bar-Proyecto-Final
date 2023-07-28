@@ -20,6 +20,7 @@ void bajaProducto();
 
 void printProductos();
 void printEmpleados();
+void printMesas(int mesa);
 
 void numProductosRegistrados();
 void numEmpleadosRegistrados();
@@ -86,7 +87,7 @@ empleado empleados[20] = { //Array con todos los empleados
     {true, 3, "Yolanda", 21, 3, Mesero},
 };
 
-producto productos[50] = {
+producto productos[50] = { // Array con los productos vendidos
     {true, 1, "Papas", 30},
     {true, 2, "Hotdog", 35},
     {true, 3, "Hamburguesa", 65},
@@ -103,13 +104,18 @@ producto productos[50] = {
     {true, 14, "Perla Negra", 35},
     {true, 15, "Mojito", 35},
     {true, 16, "Limonada", 20},
-}; // Array con los productos vendidos
+};
 
 mesa mesas[30]; //Array con las mesas del bar
 
 int main(){ //--------------------------------------------------------
     int mainOpc;
-    
+
+    for(unsigned int i = 0; i < sizeof(mesas) / sizeof(mesas[1]); i++){ // Asigna un numero a cada mesa
+        mesas[i].numMesa = i + 1;
+        printf("%d\n", mesas[i].numMesa);
+    }
+
     while(mainOpc != 0){ //Imprimir menu principal
         system("cls");
 
@@ -156,7 +162,52 @@ int main(){ //--------------------------------------------------------
 
 //Funciones Principales-----------------------------------------------
 void adminMesas(){ //Asigna mesas a meseros
+    int mesaOpc, modificarOpc;
+    int defaultPar = 0;
 
+    system("cls");
+
+    printMesas(defaultPar);
+
+    printf("\nIndique la mesa a administrar\n");
+    scanf("%d", &mesaOpc);
+
+    if(mesaOpc > 0 && mesaOpc <= sizeof(mesas)/sizeof(mesas[1])){ // Si la mesa existe
+        for(unsigned int i = 0; i < sizeof(mesas)/sizeof(mesas[1]); i++){
+            if(mesas[i].numMesa == mesaOpc){
+                while(modificarOpc != 0){
+                    printf("\nQue deseas modificar de la mesa %d?\n", mesas[i].numMesa);
+                    printf("1) Mesero\n");
+                    printf("2) Cuenta\n");
+                    printf("0) Regresar\n");
+
+                    scanf("%d", &modificarOpc);
+
+                    switch(modificarOpc){
+                    case 1:
+                        printf("\nIngresa el mesero a cargo de la mesa: %d\n", mesas[i].mesaMesero);
+                        scanf("%s", &mesas[i].mesaMesero);
+                        system("cls");
+                        
+                        break;
+                    case 2:
+                        printf("\nIngresa el nuevo precio de: %s\n", mesas[i].mesaCuenta);
+                        scanf("%f", &mesas[i].mesaCuenta);
+                        system("cls");
+                        
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
+            }
+        }
+    } else{
+        printf("-----Ingrese un producto registrado-----\n\nPresione una tecla para continuar\n");
+        clean();
+        getchar();
+    }
 }
 
 void adminCuenta(){ // Menu administración de cuentas
@@ -295,7 +346,7 @@ void modificacionProducto(){ // Modifica las propiedades de los productos
     }
 }
 
-void bajaProducto(){ //AGREGAR NO DAR DE BAJA PRODUCTOS DADOS DE BAJA
+void bajaProducto(){ // Da de baja logica a productos
     int numeroProductoOpc;
 
     system("cls");
@@ -494,6 +545,15 @@ void printEmpleados(){ // Imprime los empleados dados de alta como tabla
     for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
         if(empleados[i].alta){
             printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
+        }
+    }
+}
+
+void printMesas(int mesaPar){ // Imprime las mesas activas
+    printf(" # MESA |          EMPLEADO | CUENTA |\n");
+    for(unsigned int i = 0; i < sizeof(mesas) / sizeof(mesas[1]); i++){
+        if(productos[i].alta){
+            printf("%7d |%18s | %7d |\n", mesas[i].numMesa, &mesas[i].mesaMesero.nombre, &mesas[i].mesaCuenta.cuentaProductos);
         }
     }
 }
