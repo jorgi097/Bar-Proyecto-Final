@@ -30,13 +30,13 @@ void clean();
 
 
 //Enums---------------------------------------------------------------
-enum turno{
+enum turno{ // Turnos que se pueden asignar
     Matutino = 1,
     Vespertino = 2,
     Nocturno = 3
 };
 
-enum puesto{
+enum puesto{ // Puestos que se pueden asignar
     Mesero = 1,
     Cocinero = 2,
     Gerente = 3,
@@ -302,29 +302,40 @@ void bajaProducto(){ //AGREGAR NO DAR DE BAJA PRODUCTOS DADOS DE BAJA
 
 //--------------------------------------------------------------------
 
-void altaEmpleado(){ // AGREGAR DAR DE ALTA EMPLEADOS PREVIAMENTE DADOS DE BAJA
+void altaEmpleado(){ // Da de alta un nuevo empleado
     system("cls");
 
     printEmpleados();
 
-    printf("\nIngresa el nombre del empleado a dar de alta: ");
+    printf("\nIngresa el nombre del empleado a dar de alta: \n");
     scanf("%s", empleados[numEmpleadosIdUsados + 1].nombre);
 
-    printf("Ingresa la edad del empleado a dar de alta: ");
+    printf("Ingresa la edad del empleado a dar de alta: \n");
     scanf("%d", &empleados[numEmpleadosIdUsados + 1].edad);
 
-    printf("Ingresa el turno del empleado a dar de alta (1: Matutino, 2: Vespertino, 3: Nocturno): ");
-    scanf("%d", (int*)&empleados[numEmpleadosIdUsados + 1].turno);
+    do{
+        printf("Ingresa el turno del empleado a dar de alta (1: Matutino, 2: Vespertino, 3: Nocturno): \n");
+        scanf("%d", (int*)&empleados[numEmpleadosIdUsados + 1].turno);
+        if(empleados[numEmpleadosIdUsados + 1].turno < 1 || empleados[numEmpleadosIdUsados + 1].turno > 3){
+            printf("\n-----Ingrese un turno valido-----\n\n");
+        }
+    } while(empleados[numEmpleadosIdUsados + 1].turno < 1 || empleados[numEmpleadosIdUsados + 1].turno > 3); // Verifica que sea un turno valido
 
-    printf("Ingresa el puesto del empleado a dar de alta (1: Mesero, 2: Cocinero, 3: Gerente, 4: Bartender): ");
-    scanf("%d", (int*)&empleados[numEmpleadosIdUsados + 1].puesto);
+    do{
+
+        printf("Ingresa el puesto del empleado a dar de alta (1: Mesero, 2: Cocinero, 3: Gerente, 4: Bartender): \n");
+        scanf("%d", (int*)&empleados[numEmpleadosIdUsados + 1].puesto);
+        if(empleados[numEmpleadosIdUsados + 1].puesto < 1 || empleados[numEmpleadosIdUsados + 1].puesto > 4){
+            printf("\n-----Ingrese un puesto valido-----\n\n");
+        }
+    } while(empleados[numEmpleadosIdUsados + 1].puesto < 1 || empleados[numEmpleadosIdUsados + 1].puesto > 4); // Verifica que sea un puesto valido
 
     empleados[numEmpleadosIdUsados + 1].alta = true;
     empleados[numEmpleadosIdUsados + 1].id = numEmpleadosIdUsados + 1;
 
 }
 
-void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
+void modificacionEmpleado(){ // Modifica las propiedades de los empleados
     int numeroEmpleadoOpc, modificarOpc;
 
     system("cls");
@@ -334,46 +345,66 @@ void modificacionEmpleado(){ // AGREGAR NO MODIFICAR EMPLEADOS DADOS DE BAJA
     printf("\nIngresa el numero de empleado del empleado a modificar: \n");
     scanf("%d", &numeroEmpleadoOpc);
 
-    while(modificarOpc != 0){
-        printf("Que deseas modificar de %s?\n", empleados[numeroEmpleadoOpc - 1].nombre);
-        printf("1) Nombre\n");
-        printf("2) Edad\n");
-        printf("3) Turno\n");
-        printf("4) Puesto\n");
-        printf("0) Regresar\n");
 
-        scanf("%d", &modificarOpc);
+    if(buscarEmp(numeroEmpleadoOpc)){ // Si el empleado esta dado de alta
+        for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
+            if(empleados[i].id == numeroEmpleadoOpc){
+                while(modificarOpc != 0){
+                    printf("\nQue deseas modificar de %s?\n", empleados[i].nombre);
+                    printf("1) Nombre\n");
+                    printf("2) Edad\n");
+                    printf("3) Turno\n");
+                    printf("4) Puesto\n");
+                    printf("0) Regresar\n");
 
-        switch(modificarOpc){
-        case 1:
-            printf("\nIngresa el nombre del empleado: \n");
-            scanf("%s", empleados[numeroEmpleadoOpc - 1].nombre);
-            printf("Cambio ralizado\n\n");
-            break;
-        case 2:
-            printf("\nIngresa la edad del empleado: ");
-            scanf("%d", &empleados[numeroEmpleadoOpc - 1].edad);
-            printf("Cambio ralizado\n\n");
-            break;
-        case 3:
-            printf("\nIngresa el turno del empleado (1: Matutino, 2: Vespertino, 3: Nocturno): \n");
-            scanf("%d", (int*)&empleados[numeroEmpleadoOpc - 1].turno);
-            printf("Cambio ralizado\n\n");
-            break;
-        case 4:
-            printf("\nIngresa el puesto del empleado(1: Mesero, 2: Cocinero, 3: Gerente, 4: Bartender): \n");
-            scanf("%d", (int*)&empleados[numeroEmpleadoOpc - 1].puesto);
-            printf("Cambio ralizado\n\n");
-            break;
+                    scanf("%d", &modificarOpc);
 
-        default:
-            break;
+                    switch(modificarOpc){
+                    case 1:
+                        printf("\nIngresa el nuevo nombre del empleado: %s\n", empleados[i].nombre);
+                        scanf("%s", empleados[i].nombre);
+                        system("cls");
+                        printEmpleados();
+                        break;
+                    case 2:
+                        printf("\nIngresa la nueva edad del empleado: %s\n", empleados[i].nombre);
+                        scanf("%d", &empleados[i].edad);
+                        system("cls");
+                        printEmpleados();
+                        break;
+                    case 3:
+                        do{
+                            printf("\nIngresa el nuevo turno del empleado: %s\n", empleados[i].nombre);
+                            scanf("%d", (int*)&empleados[i].turno);
+                            if(empleados[i].turno < Matutino || empleados[i].turno > Nocturno){
+                                printf("-----Ingrese un turno valido-----\n\n");
+                            }
+                        } while(empleados[i].turno < Matutino || empleados[i].turno > Nocturno); // Verifica que sea un turno valido
+                        system("cls");
+                        printEmpleados();
+                        break;
+                    case 4:
+                        do{
+                            printf("\nIngresa el nuevo puesto del empleado: %s\n", empleados[i].nombre);
+                            scanf("%d", (int*)&empleados[i].puesto);
+                            if(empleados[i].puesto < 1 || empleados[i].puesto > 4){
+                                printf("------Ingrese un puesto valido------\n\n");
+                            }
+                        } while(empleados[i].puesto < 1 || empleados[i].puesto > 4); // Verifica que sea un puesto valido
+                        system("cls");
+                        printEmpleados();
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
+            }
         }
     }
 }
 
-void bajaEmpleado(){ //Da de baja logica a empleados
-//AGREGAR NO DAR DE BAJA A EMPLEADOS DADOS DE BAJA
+void bajaEmpleado(){ // Da de baja logica a empleados
     int numeroEmpleadoOpc;
 
     system("cls");
@@ -383,7 +414,7 @@ void bajaEmpleado(){ //Da de baja logica a empleados
     printf("\nIngresa el numero de empleado a dar de baja: \n");
     scanf("%d", &numeroEmpleadoOpc);
 
-    if(buscarEmp(numeroEmpleadoOpc)){
+    if(buscarEmp(numeroEmpleadoOpc)){ // Solo si esta dado de alta
         for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
             if(empleados[i].id == numeroEmpleadoOpc){
                 empleados[i].alta = false;
@@ -393,41 +424,41 @@ void bajaEmpleado(){ //Da de baja logica a empleados
 }
 
     // FUnciones terciarias-----------------------------------------------
-void numEmpleadosRegistrados(){
+void numEmpleadosRegistrados(){ // Guarda en las variables cuantos empleados estan actualmente dados de alta y los IDs usados hasta el momento
     numEmpleadosAlta = 0;
     numEmpleadosIdUsados = 0;
 
-    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
+    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){ // Empleados dados de alta actualmente
         if(empleados[i].alta){
             numEmpleadosAlta++;
         }
     }
 
-    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
+    for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){ // Ids usados al momento
         if(empleados[i].id != 0){
             numEmpleadosIdUsados++;
         }
     }
 }
 
-void numProductosRegistrados(){
-    numProductosAlta = 0; // Resetea a 0
-    numIdUsados = 0; // Resetea a 0
+void numProductosRegistrados(){ // Guarda en las variables cuantos productos estan actualmente dados de alta y los IDs usados hasta el momento
+    numProductosAlta = 0;
+    numIdUsados = 0;
 
-    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // Guarda cuantos productos estan dados de alta
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // Productos dados de alta actualmente
         if(productos[i].alta){
             numProductosAlta++;
         }
     }
 
-    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // Guarda cuantos ID estan usados
+    for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){ // IDs usados al momento
         if(productos[i].id != 0){
             numIdUsados++;
         }
     }
 }
 
-void printProductos(){
+void printProductos(){ // Imprime los productos dados de alta como tabla
     printf("El numero de productos registrados es: %d\n\n", numProductosAlta);
 
     printf(" ID |          NOMBRE |  PRECIO |\n");
@@ -438,15 +469,15 @@ void printProductos(){
     }
 }
 
-void printEmpleados(){
+void printEmpleados(){ // Imprime los empleados dados de alta como tabla
     printf("Hay %d empleados dados de alta en este momento\n\n", numEmpleadosAlta);
 
     printf("TURNO: Matutino = 1 | Vespertino = 2 | Nocturno = 3\n\nPUESTO: Mesero = 1 | Cocinero = 2 | Gerente = 3 | Bartender = 4\n\n");
 
-    printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |    ALTA\n");
+    printf(" NUMERO DE EMPLEADO |         NOMBRE |     EDAD |     TURNO |     PUESTO |\n");
     for(unsigned int i = 0; i < sizeof(empleados) / sizeof(empleados[1]); i++){
         if(empleados[i].alta){
-            printf("%19d | %14s |%9d |%10d |%11d |%8d\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto, empleados[i].alta);
+            printf("%19d | %14s |%9d |%10d |%11d |\n", empleados[i].id, empleados[i].nombre, empleados[i].edad, empleados[i].turno, empleados[i].puesto);
         }
     }
 }
@@ -460,7 +491,7 @@ bool buscarEmp(int numEmpleado){ // Busca si un empleado esta dado de alta segun
     return false;
 }
 
-bool buscarProd(int numProd){ // Busca si un empleado esta dado de alta segun su numero de empleado
+bool buscarProd(int numProd){ // Busca si un producto esta dado de alta segun su numero de empleado
     for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[1]); i++){
         if(productos[i].id == numProd && productos[i].alta){
             return true;
@@ -469,6 +500,6 @@ bool buscarProd(int numProd){ // Busca si un empleado esta dado de alta segun su
     return false;
 }
 
-void clean(){ //Limpia el buffer de la entrada estandar (teclado)
+void clean(){ // Limpia el buffer de la entrada estandar (teclado)
     while(getchar() != '\n');
 }
