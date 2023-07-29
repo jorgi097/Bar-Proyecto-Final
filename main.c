@@ -64,13 +64,14 @@ typedef struct empleado{
 } empleado;
 
 typedef struct cuenta{
+    int id;
     producto cuentaProductos[100];
 } cuenta;
 
 typedef struct mesa{
     int numMesa;
-    empleado mesaMesero[1];
-    cuenta mesaCuenta[1];
+    empleado mesaMesero;
+    cuenta mesaCuenta;
 } mesa;
 
 
@@ -107,6 +108,8 @@ producto productos[50] = { // Array con los productos vendidos
 };
 
 mesa mesas[30]; //Array con las mesas del bar
+
+cuenta cuentas[100];
 
 int main(){ //--------------------------------------------------------
     int mainOpc;
@@ -162,7 +165,7 @@ int main(){ //--------------------------------------------------------
 
 //Funciones Principales-----------------------------------------------
 void adminMesas(){ //Asigna mesas a meseros
-    int mesaOpc, modificarOpc;
+    int mesaOpc, modificarOpc, meseroOpc, cuentaOpc;
     int defaultPar = 0;
 
     system("cls");
@@ -172,8 +175,8 @@ void adminMesas(){ //Asigna mesas a meseros
     printf("\nIndique la mesa a administrar\n");
     scanf("%d", &mesaOpc);
 
-    if(mesaOpc > 0 && mesaOpc <= sizeof(mesas)/sizeof(mesas[1])){ // Si la mesa existe
-        for(unsigned int i = 0; i < sizeof(mesas)/sizeof(mesas[1]); i++){
+    if(mesaOpc > 0 && mesaOpc <= sizeof(mesas) / sizeof(mesas[1])){ // Si la mesa existe
+        for(unsigned int i = 0; i < sizeof(mesas) / sizeof(mesas[1]); i++){
             if(mesas[i].numMesa == mesaOpc){
                 while(modificarOpc != 0){
                     printf("\nQue deseas modificar de la mesa %d?\n", mesas[i].numMesa);
@@ -185,16 +188,36 @@ void adminMesas(){ //Asigna mesas a meseros
 
                     switch(modificarOpc){
                     case 1:
-                        printf("\nIngresa el mesero a cargo de la mesa: %d\n", mesas[i].mesaMesero);
-                        scanf("%s", &mesas[i].mesaMesero);
+                        printf("\nIngresa el mesero a cargo de la mesa: %d\n", mesas[i].numMesa);
+                        scanf("%d", &meseroOpc);
+                        if(buscarEmp(meseroOpc)){ // Verificar si el ID del mesero existe
+                            for(unsigned int j = 0; j < sizeof(empleados) / sizeof(empleados[1]); j++){
+                                if(empleados[j].id == meseroOpc){
+                                    mesas[i].mesaMesero = empleados[j];
+                                }
+                            }
+                        } else{
+                            printf("-----Ingrese un mesero registrado-----\n\nPresione una tecla para continuar\n");
+                            clean();
+                            getchar();
+                        }
                         system("cls");
-                        
                         break;
                     case 2:
-                        printf("\nIngresa el nuevo precio de: %s\n", mesas[i].mesaCuenta);
-                        scanf("%f", &mesas[i].mesaCuenta);
+                        printf("\nIngresa el numero de cuenta de la mesa: %s\n", mesas[i].numMesa);
+                        scanf("%d", &cuentaOpc);
+                        if(buscarCuenta(cuentaOpc)){ // Verificar si el ID de la mesa existe
+                            for(unsigned int j = 0; j < sizeof(cuentas) / sizeof(cuentas[1]); j++){
+                                if(cuentas[j].id == cuentaOpc){
+                                    mesas[i].mesaCuenta = cuentas[j];
+                                }
+                            }
+                        } else{
+                            printf("-----Ingrese una cuenta disponible-----\n\nPresione una tecla para continuar\n");
+                            clean();
+                            getchar();
+                        }
                         system("cls");
-                        
                         break;
 
                     default:
@@ -204,7 +227,7 @@ void adminMesas(){ //Asigna mesas a meseros
             }
         }
     } else{
-        printf("-----Ingrese un producto registrado-----\n\nPresione una tecla para continuar\n");
+        printf("-----Ingrese una mesa registrada-----\n\nPresione una tecla para continuar\n");
         clean();
         getchar();
     }
@@ -556,6 +579,15 @@ void printMesas(int mesaPar){ // Imprime las mesas activas
             printf("%7d |%18s | %7d |\n", mesas[i].numMesa, &mesas[i].mesaMesero.nombre, &mesas[i].mesaCuenta.cuentaProductos);
         }
     }
+}
+
+bool buscarCuenta(int numCuenta) { // Busca si el numero de cuenta existe
+    for (unsigned int i = 0; i < sizeof(cuentas) / sizeof(cuentas[0]); i++) { 
+        if (cuentas[i].id == numCuenta) {
+            return true;
+        }
+    }
+    return false; 
 }
 
 bool buscarEmp(int numEmpleado){ // Busca si un empleado esta dado de alta segun su numero de empleado
