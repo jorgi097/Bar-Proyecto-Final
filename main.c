@@ -5,7 +5,7 @@
 
 //Prototipos----------------------------------------------------------
 void adminMesas();
-void adminCuenta();
+void adminCuenta(unsigned int mesaOpc);
 void adminCobro();
 void adminInventario();
 void adminEmpleados();
@@ -135,10 +135,8 @@ int main(){ //--------------------------------------------------------
 
 		printf("Que deseas administrar?\n\n");
 		printf("1) Mesas\n");
-		printf("2) Cuentas\n");
-		printf("3) Cobro\n");
-		printf("4) Inventario\n");
-		printf("5) Empleados\n");
+		printf("2) Inventario\n");
+		printf("3) Empleados\n");
 		printf("0) Salir\n");
 
 		scanf("%u", &mainOpc);
@@ -150,24 +148,15 @@ int main(){ //--------------------------------------------------------
 			break;
 		case 2:
 			system("cls");
-			adminCuenta();
-			break;
-		case 3:
-			system("cls");
-			adminCobro();
-			break;
-		case 4:
-			system("cls");
 			adminInventario();
 			break;
-		case 5:
+		case 3:
 			system("cls");
 			adminEmpleados();
 			break;
 		default:
 			break;
 		}
-
 	}
 
 	return 0;
@@ -192,7 +181,7 @@ void adminMesas(){ // Asigna meseros y cuentas a las mesas
 				while(modificarOpc != 0){
 					printf("\nQue deseas modificar de la mesa %u?\n", mesas[i].numMesa);
 					printf("1) Mesero\n");
-					printf("2) Cuenta\n");
+					printf("2) Abrir cuenta\n");
 					printf("0) Regresar\n");
 
 					scanf("%u", &modificarOpc);
@@ -216,21 +205,15 @@ void adminMesas(){ // Asigna meseros y cuentas a las mesas
 						}
 						system("cls");
 						break;
-					case 2:
-						printf("\nIngresa el numero de cuenta de la mesa: %u\n", mesas[i].numMesa);
-						scanf("%u", &cuentaOpc);
-						if(buscarCuenta(cuentaOpc)){ // Verificar si el ID de la mesa existe
-							for(unsigned int k = 0; k < sizeof(cuentas) / sizeof(cuentas[0]); k++){
-								if(cuentas[k].id == cuentaOpc){
-									mesas[i].mesaCuenta = cuentas[k];
-								}
-							}
-						} else{
-							printf("-----Ingrese una cuenta disponible-----\n\nPresione una tecla para continuar\n");
-							clean();
-							getchar();
-						}
-						system("cls");
+					case 2: // AGREGAR ASIGNAR CUENTA NO USADA AUTOMATICAMENTE
+
+						break;
+					case 3:
+						adminCuenta(mesaOpc);
+						break;
+
+					case 4:
+						adminCobro();
 						break;
 
 					default:
@@ -244,14 +227,6 @@ void adminMesas(){ // Asigna meseros y cuentas a las mesas
 		clean();
 		getchar();
 	}
-}
-
-void adminCuenta(){ // Menu administración de cuentas
-
-}
-
-void adminCobro(){ // Menu para realizar cobros
-
 }
 
 void adminInventario(){ // Menu administración de inventario
@@ -318,6 +293,30 @@ void adminEmpleados(){ // Menu administración de empleados
 
 
 //Funciones secundarias-----------------------------------------------
+void adminCuenta(unsigned int mesaOpc){ // Menu administración de cuentas
+	unsigned int productoCuentaOpc, modificarCuentaOpc = 500;
+
+	while(modificarCuentaOpc != 0){
+		printf("\nQue deseas modificar de la cuenta?\n");
+		printf("1) Agregar producto\n");
+		printf("2) Eliminar producto\n");
+		printf("0) Regresar\n");
+
+		scanf("%u", &modificarCuentaOpc);
+
+		switch(modificarCuentaOpc){
+			case 1:
+			
+				mesas[mesaOpc].mesaCuenta.cuentaProductos[i] = productos[productoCuentaOpc];
+				break;
+		}
+	}
+}
+
+void adminCobro(){ // Menu para realizar cobros
+
+}
+
 void altaProducto(){ // Da de alta un nuevo produto
 	system("cls");
 
