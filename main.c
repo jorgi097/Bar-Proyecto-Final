@@ -118,6 +118,7 @@ producto productos[50] = { // Array con los productos vendidos
 	{true, 14, "Perla Negra", 35},
 	{true, 15, "Mojito", 35},
 	{true, 16, "Limonada", 20},
+	{true, 17, "Irvingchelada", 40}
 };
 
 cuenta cuentas[100]; // Array con las cuentas del bar
@@ -137,6 +138,8 @@ int main(){ //--------------------------------------------------------
 		mesas[i].numMesa = i + 1; // Asigna un id a cada mesa
 		mesas[i].mesaCuenta = NULL; // Inicializa el puntero como NULL
 	}
+
+	printf("WELCOME TO IRVING´S BAR ULTIMATE MANAGEMENT SYSTEM");
 
 	while(mainOpc != 0){ // Imprimir menu principal
 		system("cls");
