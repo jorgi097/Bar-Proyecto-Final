@@ -139,11 +139,13 @@ int main(){ //--------------------------------------------------------
 		mesas[i].mesaCuenta = NULL; // Inicializa el puntero como NULL
 	}
 
-	printf("WELCOME TO IRVING´S BAR ULTIMATE MANAGEMENT SYSTEM");
+
 
 	while(mainOpc != 0){ // Imprimir menu principal
 		system("cls");
 
+		printf("WELCOME TO IRVINGS BAR ULTIMATE MANAGEMENT SYSTEM\n\n");
+		
 		printf("Que deseas administrar?\n\n");
 		printf("1) Mesas\n");
 		printf("2) Inventario\n");
