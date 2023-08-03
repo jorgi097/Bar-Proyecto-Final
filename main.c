@@ -721,18 +721,18 @@ void printProductos(int productosParametro){ // Imprime los productos dados de a
 	if(productosParametro == 500){
 		printf("El numero de productos registrados es: %u\n\n", numProductosAlta);
 
-		printf(" ID |      NOMBRE |  PRECIO |\n");
+		printf(" ID |           NOMBRE |  PRECIO |\n");
 		for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
 
 			if(productos[i].alta){
-				printf("%3u |%12s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
+				printf("%3u |%17s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
 			}
 		}
 	} else{
-		printf(" ID |      NOMBRE |  PRECIO |\n");
+		printf(" ID |           NOMBRE |  PRECIO |\n");
 		for(unsigned int i = 0; i < sizeof(productos) / sizeof(productos[0]); i++){
 			if(productos[i].alta){
-				printf("%3u |%12s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
+				printf("%3u |%17s | %7.2f |\n", productos[i].id, productos[i].nombre, productos[i].precio);
 			}
 		}
 	}
